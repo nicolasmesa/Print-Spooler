@@ -40,6 +40,8 @@ void runAsOwner();
 
 void runAsRunner();
 
+char *getPrintFilePath(int fileId);
+
 void initRunners();
 
 void loadDefaultConfig();

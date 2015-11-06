@@ -56,6 +56,13 @@ void runAsRunner() {
         seteuid(runnerId);
 }
 
+char *getPrintFilePath(int fileId) {
+        char *dst = malloc(strlen(filesPath) + 21);
+        sprintf(dst, "%s/%d", filesPath, fileId);
+
+        return dst;
+}
+
 void loadDefaultConfig() {
         config = malloc(sizeof(struct config_struct));
 
@@ -87,8 +94,6 @@ void loadConfig() {
         if (ret < 0) {
                 printAndExit(NULL);
         }
-
-        printf("Loaded config. Next id (%d)\n", config->next_id);
 
         close(fd);
 }
@@ -167,8 +172,6 @@ void saveFileList() {
         if (fd < 0) {
                 printAndExit(NULL);
         }
-
-        printf("Called\n");
 
         while (window != NULL) {
                 struct file_struct *file = window->file;

@@ -19,8 +19,6 @@ void saveConfig() {
 
 	int ret = write(fd, config, sizeof(struct config_struct));
 
-	printf("save config (%d)\n", ret);
-
 	if (ret < 0 ) {
 		printAndExit(NULL);
 	}
@@ -47,8 +45,6 @@ void copyFile(int fd, char *dst) {
 		if (numWritten < 0 ) {
 			printAndExit(NULL);
 		}
-
-		printf("numwritten (%d), numread(%d)\n", numWritten, numRead);
 
 		if (numWritten != numRead) {
 			printAndExit("Num written different than num read");
@@ -81,11 +77,7 @@ void addFileToQueue(char *filePath) {
 		printf("\tError: %s\n", strerror(errno));
 	}
 
-	char *dst = malloc(strlen(filesPath) + 21);
-
-	sprintf(dst, "%s/%d", filesPath, fileId);
-
-	printf("dst: (%s)\n", dst);
+	char *dst = getPrintFilePath(fileId);
 
 	copyFile(fd, dst);
 
@@ -100,9 +92,7 @@ void addFileToQueue(char *filePath) {
 	file->userId = runnerId;
 
 	addFileToList(file);
-	printf("Added to list\n");
 	config->next_id++;
-	printf("nextid: %d\n", config->next_id);
 }
 
 void addFilesToQueue(int numFiles, char **filePaths) {
@@ -124,7 +114,6 @@ void init() {
 
 void end() {
 	saveConfig();
-	printf("config->id = %d\n", config->next_id);
 	saveFileList();
 }
 
