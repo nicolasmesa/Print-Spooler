@@ -25,8 +25,10 @@ struct file_list_node {
         struct file_struct *file;
 };
 
-int ownerId;
-int runnerId;
+struct file_list {
+	struct file_list_node *head;
+	struct file_list_node *tail;
+};
 
 void printAndExit(char *msg);
 

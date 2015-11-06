@@ -9,6 +9,8 @@
 #include <time.h>
 #include "core.h"
 
+int ownerId;
+int runnerId;
 struct config_struct *config;
 char *configPath = "config/config";
 char *fileListPath = "config/file-list";
