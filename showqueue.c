@@ -20,7 +20,7 @@ void printFile(struct file_struct *file) {
 }
 
 void displayFileList() {
-	struct file_list_node *window = fileListHead;
+	struct file_list_node *window = fileList->head;
 
 	while (window != NULL) {
 		struct file_struct *file = window->file;

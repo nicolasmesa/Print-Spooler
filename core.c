@@ -15,7 +15,7 @@ struct config_struct *config;
 char *configPath = "config/config";
 char *fileListPath = "config/file-list";
 char *filesPath = "printer";
-struct file_list_node *fileListHead;
+struct file_list *fileList;
 
 void printAndExit(char *msg) {
         if (msg == NULL) {
@@ -93,12 +93,33 @@ void loadConfig() {
         close(fd);
 }
 
+void initFileList() {
+	if (fileList != NULL) {
+		return;
+	}
+
+	fileList = safeMalloc(sizeof(struct file_list));
+
+	fileList->head = NULL;
+	fileList->tail = NULL;
+}
+
 void addFileToList(struct file_struct *file) {
+	if (fileList == NULL) {
+		initFileList();
+	}
+
         struct file_list_node *node = safeMalloc(sizeof(struct file_list_node));
 
-        node->file = file;
-        node->next = fileListHead;
-        fileListHead = node;
+	node->file = file;
+        node->next = NULL;
+
+	if (fileList->head == NULL) {
+		fileList->head = fileList->tail = node;
+	} else {
+		fileList->tail->next = node;
+		fileList->tail = node;
+	}
 }
 
 
@@ -108,13 +129,15 @@ void loadFileList() {
         int fileStructSize = sizeof(struct file_struct);
         int numRead;
 
+	if (fileList == NULL) {
+                initFileList();
+        }
 
         if (fd < 0) {
                 if ((int) errno != 2) {
                         printAndExit(NULL);
                 }
 
-                fileListHead = NULL;
                 return;
         }
 
@@ -132,7 +155,11 @@ void loadFileList() {
 }
 
 void saveFileList() {
-        struct file_list_node *window = fileListHead;
+	if (fileList == NULL) {
+                initFileList();
+        }
+
+        struct file_list_node *window = fileList->head;
         int fd = open(fileListPath, O_WRONLY | O_CREAT | O_TRUNC, 0777);
 
         //@TODO make sure we are running as owner
