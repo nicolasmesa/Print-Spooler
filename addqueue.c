@@ -6,6 +6,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <time.h>
 
 
 struct config_struct {
@@ -25,6 +26,7 @@ struct file_list_node {
 
 static struct config_struct *config;
 static char *configPath = "config/config";
+static char *fileListPath = "config/file-list";
 static char *filesPath = "printer";
 static struct file_list_node *fileListHead;
 
@@ -39,6 +41,23 @@ void printAndExit(char *msg) {
 
 	printf("Error: %s\n", msg);
 	exit(1);
+}
+
+
+void *safeMalloc(size_t len) {
+	void *new = malloc(len);
+
+	if (new == NULL) {
+		printAndExit(NULL);
+	}
+
+	return new;
+}
+
+void *dupMem(void *src, size_t len) {
+	void *dst = safeMalloc(len);
+	memcpy(dst, src, len);
+	return dst;
 }
 
 void runAsOwner() {
@@ -80,17 +99,21 @@ void loadConfig() {
 		printAndExit(NULL);
 	}
 
+	printf("Loaded config. Next id (%d)\n", config->next_id);
+
 	close(fd);
 }
 
 void saveConfig() {
-	int fd = open(configPath, O_WRONLY | O_CREAT | O_TRUNC, 0777);
+	int fd = open(configPath, O_WRONLY | O_CREAT | O_TRUNC, 0600);
 
 	if (fd < 0) {
 		printAndExit("Problem opening the config file");
 	}
 
 	int ret = write(fd, config, sizeof(struct config_struct));
+
+	printf("save config (%d)\n", ret);
 
 	if (ret < 0 ) {
 		printAndExit(NULL);
@@ -135,12 +158,22 @@ void copyFile(int fd, char *dst) {
 	close(dstFd);
 }
 
+void addFileToList(struct file_struct *file) {
+        struct file_list_node *node = safeMalloc(sizeof(struct file_list_node));
+
+        node->file = file;
+        node->next = fileListHead;
+        fileListHead = node;
+}
+
 void addFileToQueue(char *filePath) {
+	int fileId = config->next_id;
+	struct file_struct *file;
+
 	if (filePath == NULL) {
 		return;
 	}
 
-	int fileId = config->next_id;
 
 	runAsRunner();
 	int fd = open(filePath, O_RDONLY);
@@ -162,7 +195,16 @@ void addFileToQueue(char *filePath) {
 
 	close(fd);
 
+	file = safeMalloc(sizeof(struct file_struct));
+
+	file->id = fileId;
+	file->timestamp = (int) time(NULL);
+	file->userId = runnerId;
+
+	addFileToList(file);
+	printf("Added to list\n");
 	config->next_id++;
+	printf("nextid: %d\n", config->next_id);
 }
 
 void addFilesToQueue(int numFiles, char **filePaths) {
@@ -173,6 +215,61 @@ void addFilesToQueue(int numFiles, char **filePaths) {
         }
 }
 
+void loadFileList() {
+	int fd = open(fileListPath, O_RDONLY);
+	struct file_struct *file;
+	int fileStructSize = sizeof(struct file_struct);
+	int numRead;
+	
+
+	if (fd < 0) {
+		if ((int) errno != 2) {
+			printAndExit(NULL);
+		}
+
+		fileListHead = NULL;
+		return;
+	}
+
+	file = safeMalloc(sizeof(struct file_struct));
+
+	while ((numRead = read(fd, file, fileStructSize))== fileStructSize) {
+		addFileToList(file);
+		file = safeMalloc(sizeof(struct file_struct));
+	}
+
+	// The last file allocated is not used.
+	free(file);
+
+	close(fd);
+}
+
+void saveFileList() {
+	struct file_list_node *window = fileListHead;
+	int fd = open(fileListPath, O_WRONLY | O_CREAT | O_TRUNC, 0777);
+
+	//@TODO make sure we are running as owner
+
+	if (fd < 0) {
+		printAndExit(NULL);
+	}
+
+	printf("Called\n");
+
+	while (window != NULL) {
+		struct file_struct *file = window->file;
+		int numWritten = write(fd, file, sizeof(struct file_struct));
+
+		if (numWritten != sizeof(struct file_struct)) {
+			printAndExit("numWritten different than size of file struct");
+		}
+
+		window = window->next;
+	}
+
+	close(fd);
+}
+
 void init() {
 	ownerId = geteuid();
 	runnerId = getuid();
@@ -180,10 +277,13 @@ void init() {
 	int mask = S_IXUSR | S_IRWXG | S_IRWXO;
 	umask(mask);
 	loadConfig();
+	loadFileList();
 }
 
 void end() {
 	saveConfig();
+	printf("config->id = %d\n", config->next_id);
+	saveFileList();
 }
 
 
