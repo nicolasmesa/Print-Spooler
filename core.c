@@ -12,9 +12,9 @@
 int ownerId;
 int runnerId;
 struct config_struct *config;
-char *configPath = "config/config";
-char *fileListPath = "config/file-list";
-char *filesPath = "printer";
+char *configPath = "/home/user1/spooler/config/config";
+char *fileListPath = "/home/user1/spooler/config/file-list";
+char *filesPath = "/home/user1/spooler/printer";
 struct file_list *fileList;
 
 void printAndExit(char *msg) {
@@ -57,8 +57,9 @@ void runAsRunner() {
 }
 
 char *getPrintFilePath(int fileId) {
-        char *dst = malloc(strlen(filesPath) + 21);
-        sprintf(dst, "%s/%d", filesPath, fileId);
+	int size = strlen(filesPath) + 20;
+        char *dst = malloc(size + 1);
+        snprintf(dst, size, "%s/%d", filesPath, fileId);
 
         return dst;
 }
