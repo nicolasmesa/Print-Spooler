@@ -7,3 +7,4 @@ addqueue
 showqueue
 rmqueue
 *.swp
+*.o
