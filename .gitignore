@@ -6,3 +6,4 @@ config
 addqueue
 showqueue
 rmqueue
+*.swp
