@@ -12,9 +12,9 @@
 int ownerId;
 int runnerId;
 struct config_struct *config;
-char *configPath = "/home/user1/spooler/config/config";
-char *fileListPath = "/home/user1/spooler/config/file-list";
-char *filesPath = "/home/user1/spooler/printer";
+char *configPath = "/home/user01/spooler/config/config";
+char *fileListPath = "/home/user01/spooler/config/file-list";
+char *filesPath = "/home/user01/spooler/printer";
 struct file_list *fileList;
 
 void printAndExit(char *msg) {
