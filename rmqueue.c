@@ -35,7 +35,7 @@ void removeFile(struct file_list_node  *fileNode, struct file_list_node *prev) {
 }
 
 void removeFileNode(char *nodeId) {
-	unsigned int id = atoi(nodeId);
+	unsigned long id = atol(nodeId);
 	struct file_list_node *window = fileList->head;
 	struct file_list_node *prev = NULL;
 	int found = 0;
@@ -60,7 +60,7 @@ void removeFileNode(char *nodeId) {
 	}
 
 	if (found == 0) {
-		printf("File %d not found\n", id);
+		printf("File %lu not found\n", id);
 	}
 }
 
