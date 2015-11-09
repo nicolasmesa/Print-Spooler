@@ -85,7 +85,7 @@ void addFileToQueue(char *filePath) {
   runAsOwner();
 
   if (fd < 0) {
-    printf("%s: %s\n", filePath, strerror(errno));
+    printf("%s: X %s\n", filePath, strerror(errno));
     return;
   }
 
@@ -105,6 +105,8 @@ void addFileToQueue(char *filePath) {
 
   addFileToList(file);
   config->next_id++;
+
+  printf("%s: Y %lu\n", filePath, fileId);
 }
 
 /**
