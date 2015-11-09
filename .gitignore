@@ -8,3 +8,4 @@ showqueue
 rmqueue
 *.swp
 *.o
+vminfo.txt
