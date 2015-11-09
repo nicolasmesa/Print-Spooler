@@ -87,6 +87,7 @@ void addFileToQueue(char *filePath) {
 
 	if (fd < 0) {
 		printf("Error: Can't open file %s, %s\n", filePath, strerror(errno));
+		return;
 	}
 
 	char *dst = getPrintFilePath(fileId);
