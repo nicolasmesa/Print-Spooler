@@ -16,14 +16,15 @@ cp rmqueue /bin/rmqueue
 cp showqueue /bin/showqueue
 
 chown "$USERGROUP" /bin/addqueue /bin/rmqueue /bin/showqueue
-chmod 711 /bin/addqueue /bin/rmqueue /bin/showqueue
-chmod +s /bin/addqueue /bin/rmqueue /bin/showqueue
+chmod 111 /bin/addqueue /bin/rmqueue /bin/showqueue
+chmod u+s /bin/addqueue /bin/rmqueue /bin/showqueue
 
 echo "Creating directories"
 
 
 rm -rf "$DIRPATH"
 
+umask 077
 mkdir -p "$DIRPATH/config"
 mkdir -p "$DIRPATH/printer"
 
