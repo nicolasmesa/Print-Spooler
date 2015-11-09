@@ -14,17 +14,15 @@
  * Prints the information of the file to stdout
  */
 void printFile(struct file_struct *file) {
-  unsigned int id = file->id;
+  unsigned long id = file->id;
   time_t timestamp = (time_t)file->timestamp;
-  char *timeString = ctime(&timestamp);
-  unsigned int userId = file->userId;
   struct tm *tminfo = localtime(&timestamp);
+  char timeString[100];
+  unsigned int userId = file->userId;
 
-  char timee[100];
+  strftime(timeString, 100, "%F_%H:%M", tminfo);
 
-  strftime(timee, 100, "%F_%H:%M", tminfo);
-
-  printf("%u, %u, %u, %s\n", id, userId, id, timee);
+  printf("%lu %u %s %lu\n", id, userId, timeString, id);
 }
 
 /**
