@@ -10,6 +10,9 @@
 #include "core.h"
 #include "common.h"
 
+/**
+ * Prints the information of the file to stdout
+ */
 void printFile(struct file_struct *file) {
 	unsigned int id = file->id;
 	time_t timestamp = (time_t) file->timestamp;
@@ -19,6 +22,9 @@ void printFile(struct file_struct *file) {
 	printf("%u, %u, %u, %s", id, userId, id, timeString);
 }
 
+/**
+ * Prints the file list to stdout
+ */
 void displayFileList() {
 	struct file_list_node *window = fileList->head;
 
@@ -29,11 +35,17 @@ void displayFileList() {
 	}
 }
 
+/**
+ * Initializes everyting needed by this program 
+ */
 void init() {
 	loadConfig();
         loadFileList();
 }
 
+/**
+ * Main function. Initializes and the displays the file list
+ */
 int main (int argc, char **argv) {
 	init();
 
