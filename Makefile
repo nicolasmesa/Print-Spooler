@@ -1,4 +1,4 @@
-# A simple Makefile
+# Makefile for the three commands
 
 # List the object files in one place
 OBJADD=core.o addqueue.o

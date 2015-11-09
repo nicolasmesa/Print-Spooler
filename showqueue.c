@@ -18,8 +18,13 @@ void printFile(struct file_struct *file) {
   time_t timestamp = (time_t)file->timestamp;
   char *timeString = ctime(&timestamp);
   unsigned int userId = file->userId;
+  struct tm *tminfo = localtime(&timestamp);
 
-  printf("%u, %u, %u, %s", id, userId, id, timeString);
+  char timee[100];
+
+  strftime(timee, 100, "%F_%H:%M", tminfo);
+
+  printf("%u, %u, %u, %s\n", id, userId, id, timee);
 }
 
 /**

@@ -85,7 +85,7 @@ void addFileToQueue(char *filePath) {
   runAsOwner();
 
   if (fd < 0) {
-    printf("Error: Can't open file %s, %s\n", filePath, strerror(errno));
+    printf("%s: %s\n", filePath, strerror(errno));
     return;
   }
 
