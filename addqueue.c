@@ -61,7 +61,7 @@ void copyFile(int fd, char *dst) {
 }
 
 void addFileToQueue(char *filePath) {
-	int fileId = config->next_id;
+	unsigned long fileId = config->next_id;
 	struct file_struct *file;
 
 	if (filePath == NULL) {

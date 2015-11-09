@@ -56,10 +56,10 @@ void runAsRunner() {
         seteuid(runnerId);
 }
 
-char *getPrintFilePath(int fileId) {
+char *getPrintFilePath(unsigned long fileId) {
 	int size = strlen(filesPath) + 20;
         char *dst = malloc(size + 1);
-        snprintf(dst, size, "%s/%d", filesPath, fileId);
+        snprintf(dst, size, "%s/%lu", filesPath, fileId);
 
         return dst;
 }

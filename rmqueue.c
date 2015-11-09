@@ -49,7 +49,7 @@ void removeFileNode(char *nodeId) {
 				removeFile(window, prev);
 				free(window);
 			} else {
-				printf("Can't remove file (%u)\n", file->id);
+				printf("Can't remove file (%lu)\n", file->id);
 			}
 
 			break;

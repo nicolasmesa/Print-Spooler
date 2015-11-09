@@ -11,11 +11,11 @@
 #include <time.h>
 
 struct config_struct {
-        unsigned int next_id;
+        unsigned long next_id;
 };
 
 struct file_struct {
-        unsigned int id;
+        unsigned long id;
         unsigned int timestamp;
         unsigned int userId;
 };
@@ -40,7 +40,7 @@ void runAsOwner();
 
 void runAsRunner();
 
-char *getPrintFilePath(int fileId);
+char *getPrintFilePath(unsigned long fileId);
 
 void initRunners();
 
