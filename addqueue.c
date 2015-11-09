@@ -74,7 +74,7 @@ void addFileToQueue(char *filePath) {
 	runAsOwner();
 
 	if (fd < 0) {
-		printf("\tError: %s\n", strerror(errno));
+		printf("Error: Can't open file %s, %s\n", filePath, strerror(errno));
 	}
 
 	char *dst = getPrintFilePath(fileId);
