@@ -10,7 +10,11 @@
 #include "core.h"
 #include "common.h"
 
-
+/**
+ * Removes the file from the file list and from the file system.
+ * This function assumes that the id of the owner of the file 
+ * and the user have been checked.
+ */
 void removeFile(struct file_list_node  *fileNode, struct file_list_node *prev) {
 	struct file_struct *file = fileNode->file;
 	char *filePath = getPrintFilePath(file->id);
@@ -34,6 +38,11 @@ void removeFile(struct file_list_node  *fileNode, struct file_list_node *prev) {
 	prev->next = fileNode->next;
 }
 
+/**
+ * Finds the file in the file list, checks that the file belongs to the 
+ * user running the program and then deletes the file from the list and 
+ * from the file system.
+ */
 void removeFileNode(char *nodeId) {
 	unsigned long id = atol(nodeId);
 	struct file_list_node *window = fileList->head;
@@ -64,6 +73,9 @@ void removeFileNode(char *nodeId) {
 	}
 }
 
+/**
+ * Goes through all the file ids and removes each one.
+ */
 void removeFileNodes(int numNodes, char **nodes) {
 	// TODO: Make sure running as owner
 	int i = 0;
@@ -73,12 +85,19 @@ void removeFileNodes(int numNodes, char **nodes) {
 	}
 }
 
+/**
+ * Initializes everything needed
+ */
 void init() {
 	initRunners();
+	initUmask();
 	loadConfig();
         loadFileList();
 }
 
+/**
+ * Checks the arguments, calls init, removes the files
+ */
 int main (int argc, char **argv) {
 	if (argc < 2) {
                 printf("Usage: %s fileid1 [fileid2] [fileid3]\n", argv[0]);

@@ -10,6 +10,10 @@
 #include "core.h"
 #include "common.h"
 
+/**
+ * Saves the config file, overwritting the original file if it existed
+ * already.
+ */
 void saveConfig() {
 	int fd = open(configPath, O_WRONLY | O_CREAT | O_TRUNC, 0600);
 
@@ -26,6 +30,9 @@ void saveConfig() {
 	close(fd);
 }
 
+/**
+ * Copies the file descriptor to the destination passed as the argument.
+ */
 void copyFile(int fd, char *dst) {
 	char buff[1024];
 	int numRead;
@@ -60,6 +67,11 @@ void copyFile(int fd, char *dst) {
 	close(dstFd);
 }
 
+/**
+ * Tries to open a file while running as the user running the command
+ * and, if it is successful, the file is copied to the printer 
+ * directory and added to the file list
+ */
 void addFileToQueue(char *filePath) {
 	unsigned long fileId = config->next_id;
 	struct file_struct *file;
@@ -95,6 +107,10 @@ void addFileToQueue(char *filePath) {
 	config->next_id++;
 }
 
+/**
+ * Iterates through the files passed and adds them to 
+ * the file queue.
+ */
 void addFilesToQueue(int numFiles, char **filePaths) {
         int i = 0;
 
@@ -103,21 +119,29 @@ void addFilesToQueue(int numFiles, char **filePaths) {
         }
 }
 
+/**
+ * Initializes everything needed to run the addqueue command
+ */
 void init() {
 	initRunners();
 
-	int mask = S_IXUSR | S_IRWXG | S_IRWXO;
-	umask(mask);
+	initUmask();
 	loadConfig();
 	loadFileList();
 }
 
+/**
+ * Saves the new config file and the file list
+ */
 void end() {
 	saveConfig();
 	saveFileList();
 }
 
-
+/**
+ * Main function. Checks the arguments, calls init,
+ * processes the files and calls end
+ */
 int main (int argc, char **argv) {
 	if (argc < 2) {
 		printf("Usage: %s filename1 [filename2] [filename3]\n", argv[0]);

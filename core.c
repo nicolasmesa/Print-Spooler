@@ -43,6 +43,12 @@ void *dupMem(void *src, size_t len) {
         return dst;
 }
 
+void initUmask() {
+	// 0177
+	int mask = S_IXUSR | S_IRWXG | S_IRWXO;
+	umask(mask);
+}
+
 void initRunners() {
 	ownerId = geteuid();
         runnerId = getuid();

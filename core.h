@@ -30,28 +30,78 @@ struct file_list {
 	struct file_list_node *tail;
 };
 
+/**
+ * Prints error to screen and exits the program.
+ * This function should be called as a last resort.
+ */
 void printAndExit(char *msg);
 
+/**
+ * Calls malloc and makes sure that something is 
+ * returned. If not, it exits. (Does the if (ptr == NULL) 
+ * check for the caller.
+ */
 void *safeMalloc(size_t len);
 
+/**
+ * Duplicates memory and returns a new pointer poiting to 
+ * the newly allocated and duplicated piece of memory
+ */
 void *dupMem(void *src, size_t len);
 
+/**
+ * Sets the effective user to the owner of the file. Note that
+ * the executable needs to be setuid
+ */
 void runAsOwner();
 
+/**
+ * Sets the effective user to the user who is running the program
+ */
 void runAsRunner();
 
+/**
+ * Creates a string containing the path to the file with
+ * some file id.
+ */
 char *getPrintFilePath(unsigned long fileId);
 
+/**
+ * Sets the variables of the runner id and the owner id
+ */
 void initRunners();
 
+/**
+ * Initializes the umask
+ */
+void initUmask();
+
+/**
+ * Called when the config file doesn't exists. Populates the
+ * config struct with the default configuration
+ */
 void loadDefaultConfig();
 
+/**
+ * Loads the configuration from the config file
+ */
 void loadConfig();
 
+/**
+ * Creates a new list node in the file list and adds
+ * the file to the end of the list (tail)
+ */
 void addFileToList(struct file_struct *file);
 
+/**
+ * Loads the files from the files file and adds them to 
+ * the file list
+ */
 void loadFileList();
 
+/**
+ * Saves the file list to the files file
+ */
 void saveFileList();
 
 #endif
