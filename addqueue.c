@@ -15,144 +15,143 @@
  * already.
  */
 void saveConfig() {
-	int fd = open(configPath, O_WRONLY | O_CREAT | O_TRUNC, 0600);
+  int fd = open(configPath, O_WRONLY | O_CREAT | O_TRUNC, 0600);
 
-	if (fd < 0) {
-		printAndExit("Problem opening the config file");
-	}
+  if (fd < 0) {
+    printAndExit("Problem opening the config file");
+  }
 
-	int ret = write(fd, config, sizeof(struct config_struct));
+  int ret = write(fd, config, sizeof(struct config_struct));
 
-	if (ret < 0 ) {
-		printAndExit(NULL);
-	}
+  if (ret < 0) {
+    printAndExit(NULL);
+  }
 
-	close(fd);
+  close(fd);
 }
 
 /**
  * Copies the file descriptor to the destination passed as the argument.
  */
 void copyFile(int fd, char *dst) {
-	char buff[1024];
-	int numRead;
-	int numWritten;
+  char buff[1024];
+  int numRead;
+  int numWritten;
 
-	// TODO. Make sure you are running as the print spooler
-	int dstFd = open(dst, O_CREAT | O_EXCL | O_RDWR, 0600);
+  // TODO. Make sure you are running as the print spooler
+  int dstFd = open(dst, O_CREAT | O_EXCL | O_RDWR, 0600);
 
-	// TODO. The file may already exist.
-	if (dstFd < 0 ) {
-		printAndExit(NULL);
-	}
+  // TODO. The file may already exist.
+  if (dstFd < 0) {
+    printAndExit(NULL);
+  }
 
-	while ((numRead = read(fd, buff, 1023)) == 1023) {
-		numWritten = write(dstFd, buff, numRead);
+  while ((numRead = read(fd, buff, 1023)) == 1023) {
+    numWritten = write(dstFd, buff, numRead);
 
-		if (numWritten < 0 ) {
-			printAndExit(NULL);
-		}
+    if (numWritten < 0) {
+      printAndExit(NULL);
+    }
 
-		if (numWritten != numRead) {
-			printAndExit("Num written different than num read");
-		}
-	}
+    if (numWritten != numRead) {
+      printAndExit("Num written different than num read");
+    }
+  }
 
-	numWritten = write(dstFd, buff, numRead);
+  numWritten = write(dstFd, buff, numRead);
 
-        if (numWritten != numRead) {
-                printAndExit("Num written different than num read");
-        }
+  if (numWritten != numRead) {
+    printAndExit("Num written different than num read");
+  }
 
-	close(dstFd);
+  close(dstFd);
 }
 
 /**
  * Tries to open a file while running as the user running the command
- * and, if it is successful, the file is copied to the printer 
+ * and, if it is successful, the file is copied to the printer
  * directory and added to the file list
  */
 void addFileToQueue(char *filePath) {
-	unsigned long fileId = config->next_id;
-	struct file_struct *file;
+  unsigned long fileId = config->next_id;
+  struct file_struct *file;
 
-	if (filePath == NULL) {
-		return;
-	}
+  if (filePath == NULL) {
+    return;
+  }
 
+  runAsRunner();
+  int fd = open(filePath, O_RDONLY);
+  runAsOwner();
 
-	runAsRunner();
-	int fd = open(filePath, O_RDONLY);
-	runAsOwner();
+  if (fd < 0) {
+    printf("Error: Can't open file %s, %s\n", filePath, strerror(errno));
+    return;
+  }
 
-	if (fd < 0) {
-		printf("Error: Can't open file %s, %s\n", filePath, strerror(errno));
-		return;
-	}
+  char *dst = getPrintFilePath(fileId);
 
-	char *dst = getPrintFilePath(fileId);
+  copyFile(fd, dst);
 
-	copyFile(fd, dst);
+  free(dst);
 
-	free(dst);
+  close(fd);
 
-	close(fd);
+  file = safeMalloc(sizeof(struct file_struct));
 
-	file = safeMalloc(sizeof(struct file_struct));
+  file->id = fileId;
+  file->timestamp = (int)time(NULL);
+  file->userId = runnerId;
 
-	file->id = fileId;
-	file->timestamp = (int) time(NULL);
-	file->userId = runnerId;
-
-	addFileToList(file);
-	config->next_id++;
+  addFileToList(file);
+  config->next_id++;
 }
 
 /**
- * Iterates through the files passed and adds them to 
+ * Iterates through the files passed and adds them to
  * the file queue.
  */
 void addFilesToQueue(int numFiles, char **filePaths) {
-        int i = 0;
+  int i = 0;
 
-        for (i = 0; i < numFiles; i++) {
-		addFileToQueue(filePaths[i]);
-        }
+  for (i = 0; i < numFiles; i++) {
+    addFileToQueue(filePaths[i]);
+  }
 }
 
 /**
  * Initializes everything needed to run the addqueue command
  */
 void init() {
-	initRunners();
+  initRunners();
 
-	initUmask();
-	loadConfig();
-	loadFileList();
+  initUmask();
+  loadConfig();
+  loadFileList();
 }
 
 /**
  * Saves the new config file and the file list
  */
 void end() {
-	saveConfig();
-	saveFileList();
+  saveConfig();
+  saveFileList();
 }
 
 /**
  * Main function. Checks the arguments, calls init,
  * processes the files and calls end
  */
-int main (int argc, char **argv) {
-	if (argc < 2) {
-		printf("Usage: %s filename1 [filename2] [filename3]\n", argv[0]);
-		exit(1);
-	}
+int main(int argc, char **argv) {
+  if (argc < 2) {
+    printf("Usage: %s filename1 [filename2] [filename3]\n", argv[0]);
+    exit(1);
+  }
 
-	init();
+  init();
 
-	addFilesToQueue(argc - 1, argv + 1);
-	
-	end();
-	return 0;
+  addFilesToQueue(argc - 1, argv + 1);
+
+  end();
+  return 0;
 }

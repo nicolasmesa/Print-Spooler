@@ -14,42 +14,42 @@
  * Prints the information of the file to stdout
  */
 void printFile(struct file_struct *file) {
-	unsigned int id = file->id;
-	time_t timestamp = (time_t) file->timestamp;
-	char *timeString = ctime(&timestamp);
-	unsigned int userId = file->userId;
+  unsigned int id = file->id;
+  time_t timestamp = (time_t)file->timestamp;
+  char *timeString = ctime(&timestamp);
+  unsigned int userId = file->userId;
 
-	printf("%u, %u, %u, %s", id, userId, id, timeString);
+  printf("%u, %u, %u, %s", id, userId, id, timeString);
 }
 
 /**
  * Prints the file list to stdout
  */
 void displayFileList() {
-	struct file_list_node *window = fileList->head;
+  struct file_list_node *window = fileList->head;
 
-	while (window != NULL) {
-		struct file_struct *file = window->file;
-		printFile(file);
-		window = window->next;
-	}
+  while (window != NULL) {
+    struct file_struct *file = window->file;
+    printFile(file);
+    window = window->next;
+  }
 }
 
 /**
- * Initializes everyting needed by this program 
+ * Initializes everyting needed by this program
  */
 void init() {
-	loadConfig();
-        loadFileList();
+  loadConfig();
+  loadFileList();
 }
 
 /**
  * Main function. Initializes and the displays the file list
  */
-int main (int argc, char **argv) {
-	init();
+int main(int argc, char **argv) {
+  init();
 
-	displayFileList();
+  displayFileList();
 
-	return 0;	
+  return 0;
 }

@@ -11,23 +11,23 @@
 #include <time.h>
 
 struct config_struct {
-        unsigned long next_id;
+  unsigned long next_id;
 };
 
 struct file_struct {
-        unsigned long id;
-        unsigned int timestamp;
-        unsigned int userId;
+  unsigned long id;
+  unsigned int timestamp;
+  unsigned int userId;
 };
 
 struct file_list_node {
-        struct file_list_node *next;
-        struct file_struct *file;
+  struct file_list_node *next;
+  struct file_struct *file;
 };
 
 struct file_list {
-	struct file_list_node *head;
-	struct file_list_node *tail;
+  struct file_list_node *head;
+  struct file_list_node *tail;
 };
 
 /**
@@ -37,14 +37,14 @@ struct file_list {
 void printAndExit(char *msg);
 
 /**
- * Calls malloc and makes sure that something is 
- * returned. If not, it exits. (Does the if (ptr == NULL) 
+ * Calls malloc and makes sure that something is
+ * returned. If not, it exits. (Does the if (ptr == NULL)
  * check for the caller.
  */
 void *safeMalloc(size_t len);
 
 /**
- * Duplicates memory and returns a new pointer poiting to 
+ * Duplicates memory and returns a new pointer poiting to
  * the newly allocated and duplicated piece of memory
  */
 void *dupMem(void *src, size_t len);
@@ -94,7 +94,7 @@ void loadConfig();
 void addFileToList(struct file_struct *file);
 
 /**
- * Loads the files from the files file and adds them to 
+ * Loads the files from the files file and adds them to
  * the file list
  */
 void loadFileList();
