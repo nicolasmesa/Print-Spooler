@@ -32,6 +32,7 @@ echo "Setting directory permissions"
 
 chown -R "$USERGROUP" "$DIRPATH"
 
+# No need but just in case
 chmod 700 -R "$DIRPATH"
 
 echo "Done"
