@@ -58,7 +58,7 @@ void removeFileNode(char *nodeId) {
         removeFile(window, prev);
         free(window);
       } else {
-        printf("Can't remove file (%lu)\n", file->id);
+        printf("%lu: Can't remove this file, permission denied\n", file->id);
       }
 
       break;
@@ -69,7 +69,7 @@ void removeFileNode(char *nodeId) {
   }
 
   if (found == 0) {
-    printf("File %lu not found\n", id);
+    printf("%lu: File not found\n", id);
   }
 }
 
