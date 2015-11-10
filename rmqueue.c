@@ -93,7 +93,6 @@ void removeFileNodes(int numNodes, char **nodes) {
 void init() {
   initRunners();
   initUmask();
-  loadConfig();
   loadFileList();
 }
 
