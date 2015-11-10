@@ -38,10 +38,12 @@ void copyFile(int fd, char *dst) {
   int numRead;
   int numWritten;
 
-  // TODO. Make sure you are running as the print spooler
   int dstFd = safeOpenWithPerms(dst, O_CREAT | O_EXCL | O_RDWR, 0600);
 
-  // TODO. The file may already exist.
+  // The file may already exist. Following advice in http://www.homeport.org/~adam/setuid.7.html
+  // We terminate the program in response to a strange situation rather than attepting to 
+  // carry on. One solution here could be incrementing config->file_id and calling this
+  // function again
   if (dstFd < 0) {
     printAndExit(NULL);
   }

@@ -79,7 +79,6 @@ void removeFileNode(char *nodeId) {
  * Goes through all the file ids and removes each one.
  */
 void removeFileNodes(int numNodes, char **nodes) {
-  // TODO: Make sure running as owner
   int i = 0;
   for (i = 0; i < numNodes; i++) {
     char *node = nodes[i];
