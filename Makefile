@@ -29,3 +29,8 @@ uninstall:
 
 clean:
 	rm -f  *.o addqueue rmqueue showqueue
+
+test: uninstall install
+	./run-test.sh
+	./clean-environment
+	./start-environment
