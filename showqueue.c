@@ -42,6 +42,7 @@ void displayFileList() {
  * Initializes everyting needed by this program
  */
 void init() {
+  initUmask();
   loadFileList();
 }
 
