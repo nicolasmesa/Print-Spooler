@@ -24,7 +24,7 @@ echo "Creating directories"
 
 rm -rf "$DIRPATH"
 
-umask 077
+umask 477
 mkdir -p "$DIRPATH/config"
 mkdir -p "$DIRPATH/printer"
 
@@ -33,6 +33,6 @@ echo "Setting directory permissions"
 chown -R "$USERGROUP" "$DIRPATH"
 
 # No need but just in case
-chmod 700 -R "$DIRPATH"
+chmod 300 -R "$DIRPATH"
 
 echo "Done"
