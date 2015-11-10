@@ -145,6 +145,8 @@ void end() {
  * processes the files and calls end
  */
 int main(int argc, char **argv) {
+  checkFileDescriptors();
+
   if (argc < 2) {
     printf("Usage: %s filename1 [filename2] [filename3]\n", argv[0]);
     exit(1);

@@ -50,6 +50,8 @@ void init() {
  * Main function. Initializes and the displays the file list
  */
 int main(int argc, char **argv) {
+  checkFileDescriptors();
+
   init();
 
   displayFileList();

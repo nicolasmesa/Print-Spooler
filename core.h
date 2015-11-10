@@ -67,6 +67,16 @@ void runAsRunner();
 char *getPrintFilePath(unsigned long fileId);
 
 /**
+ * Verifies if a file descriptor is valid
+ */
+int fd_is_valid(int fd);
+
+/**
+ * Makes sure that file descriptors 0, 1, 2 are open
+ */
+void checkFileDescriptors();
+
+/**
  * Sets the variables of the runner id and the owner id
  */
 void initRunners();

@@ -66,6 +66,20 @@ char *getPrintFilePath(unsigned long fileId) {
   return dst;
 }
 
+int fd_is_valid(int fd)
+{
+    return fcntl(fd, F_GETFD) != -1 || errno != EBADF;
+}
+
+void checkFileDescriptors() {
+  if (fd_is_valid(0) && fd_is_valid(1) && fd_is_valid(2)) {
+    return;
+  }
+
+  // One of these files is closed. Something weird is going on
+  exit(1);
+}
+
 void loadDefaultConfig() {
   config = malloc(sizeof(struct config_struct));
 
