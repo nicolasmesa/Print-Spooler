@@ -89,6 +89,9 @@ void addFileToQueue(char *filePath) {
     return;
   }
 
+  config->next_id++;
+  saveConfig();
+
   char *dst = getPrintFilePath(fileId);
 
   copyFile(fd, dst);
@@ -97,6 +100,7 @@ void addFileToQueue(char *filePath) {
 
   close(fd);
 
+
   file = safeMalloc(sizeof(struct file_struct));
 
   file->id = fileId;
@@ -104,7 +108,6 @@ void addFileToQueue(char *filePath) {
   file->userId = runnerId;
 
   addFileToList(file);
-  config->next_id++;
 
   printf("%s: Y %lu\n", filePath, fileId);
 }
