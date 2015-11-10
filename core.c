@@ -165,7 +165,7 @@ void saveFileList() {
   }
 
   struct file_list_node *window = fileList->head;
-  int fd = open(fileListPath, O_WRONLY | O_CREAT | O_TRUNC, 0777);
+  int fd = open(fileListPath, O_WRONLY | O_CREAT | O_TRUNC, 0600);
 
   //@TODO make sure we are running as owner
 

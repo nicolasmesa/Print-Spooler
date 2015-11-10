@@ -17,7 +17,7 @@ cp showqueue /bin/showqueue
 
 chown "$USERGROUP" /bin/addqueue /bin/rmqueue /bin/showqueue
 chmod 111 /bin/addqueue /bin/rmqueue /bin/showqueue
-chmod u+s /bin/addqueue /bin/rmqueue /bin/showqueue
+chmod +s /bin/addqueue /bin/rmqueue /bin/showqueue
 
 echo "Creating directories"
 
