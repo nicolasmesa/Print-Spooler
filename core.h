@@ -67,14 +67,20 @@ void runAsRunner();
 char *getPrintFilePath(unsigned long fileId);
 
 /**
- * Verifies if a file descriptor is valid
+ * Opens the file and returns the file descriptor only
+ * if the file descriptor is not one of stdin, stdout, 
+ * stderr. Note that it doesn't check for negative values,
+ * this check is left to the caller.
  */
-int fd_is_valid(int fd);
+int safeOpen(const char *path, int oflag);
 
 /**
- * Makes sure that file descriptors 0, 1, 2 are open
+ * Opens the file and returns the file descriptor only
+ * if the file descriptor is not one of stdin, stdout, 
+ * stderr. Note that it doesn't check for negative values,
+ * this check is left to the caller.
  */
-void checkFileDescriptors();
+int safeOpenWithPerms(const char *path, int oflag, int perms);
 
 /**
  * Sets the variables of the runner id and the owner id

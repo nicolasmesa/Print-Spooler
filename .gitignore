@@ -9,3 +9,4 @@ rmqueue
 *.swp
 *.o
 vminfo.txt
+test.c

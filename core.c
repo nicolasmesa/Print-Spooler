@@ -66,18 +66,37 @@ char *getPrintFilePath(unsigned long fileId) {
   return dst;
 }
 
-int fd_is_valid(int fd)
-{
-    return fcntl(fd, F_GETFD) != -1 || errno != EBADF;
-}
-
-void checkFileDescriptors() {
-  if (fd_is_valid(0) && fd_is_valid(1) && fd_is_valid(2)) {
-    return;
+int fdIsValid(int fd) {
+  if (fd >= 0 && fd <= 2) {
+    return 0;
   }
 
-  // One of these files is closed. Something weird is going on
-  exit(1);
+  return 1;
+}
+
+int safeOpen(const char *path, int oflag) {
+  int fd = open(path, oflag);
+
+  // This means that one of stdin, stdout or stderr are closed
+  if (!fdIsValid(fd)) {
+    close(fd);
+    exit(1);
+  }
+
+  return fd;
+}
+
+int safeOpenWithPerms(const char *path, int oflag, int perms) {
+  int fd = open(path, oflag, perms);
+
+
+  // This means that one of stdin, stdout or stderr are closed
+  if (!fdIsValid(fd)) {
+    close(fd);
+    exit(1);
+  }
+
+  return fd;
 }
 
 void loadDefaultConfig() {
@@ -91,7 +110,7 @@ void loadDefaultConfig() {
 }
 
 void loadConfig() {
-  int fd = open(configPath, O_RDONLY);
+  int fd = safeOpen(configPath, O_RDONLY);
 
   if (fd < 0) {
     loadDefaultConfig();
@@ -143,7 +162,7 @@ void addFileToList(struct file_struct *file) {
 }
 
 void loadFileList() {
-  int fd = open(fileListPath, O_RDONLY);
+  int fd = safeOpen(fileListPath, O_RDONLY);
   struct file_struct *file;
   int fileStructSize = sizeof(struct file_struct);
   int numRead;
@@ -179,7 +198,7 @@ void saveFileList() {
   }
 
   struct file_list_node *window = fileList->head;
-  int fd = open(fileListPath, O_WRONLY | O_CREAT | O_TRUNC, 0600);
+  int fd = safeOpenWithPerms(fileListPath, O_WRONLY | O_CREAT | O_TRUNC, 0600);
 
   //@TODO make sure we are running as owner
 

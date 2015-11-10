@@ -15,7 +15,7 @@
  * already.
  */
 void saveConfig() {
-  int fd = open(configPath, O_WRONLY | O_CREAT | O_TRUNC, 0600);
+  int fd = safeOpenWithPerms(configPath, O_WRONLY | O_CREAT | O_TRUNC, 0600);
 
   if (fd < 0) {
     printAndExit("Problem opening the config file");
@@ -39,7 +39,7 @@ void copyFile(int fd, char *dst) {
   int numWritten;
 
   // TODO. Make sure you are running as the print spooler
-  int dstFd = open(dst, O_CREAT | O_EXCL | O_RDWR, 0600);
+  int dstFd = safeOpenWithPerms(dst, O_CREAT | O_EXCL | O_RDWR, 0600);
 
   // TODO. The file may already exist.
   if (dstFd < 0) {
@@ -81,7 +81,7 @@ void addFileToQueue(char *filePath) {
   }
 
   runAsRunner();
-  int fd = open(filePath, O_RDONLY);
+  int fd = safeOpen(filePath, O_RDONLY);
   runAsOwner();
 
   if (fd < 0) {
@@ -145,8 +145,6 @@ void end() {
  * processes the files and calls end
  */
 int main(int argc, char **argv) {
-  checkFileDescriptors();
-
   if (argc < 2) {
     printf("Usage: %s filename1 [filename2] [filename3]\n", argv[0]);
     exit(1);
