@@ -32,5 +32,5 @@ clean:
 
 test: uninstall install
 	./run-test.sh
-	./clean-environment
-	./start-environment
+	./clean-environment.sh
+	./start-environment.sh
