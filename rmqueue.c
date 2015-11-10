@@ -101,11 +101,6 @@ void init() {
  * Checks the arguments, calls init, removes the files
  */
 int main(int argc, char **argv) {
-  if (argc < 2) {
-    printf("Usage: %s fileid1 [fileid2] [fileid3]\n", argv[0]);
-    exit(1);
-  }
-
   init();
 
   removeFileNodes(argc - 1, argv + 1);
