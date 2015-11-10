@@ -7,7 +7,7 @@ echo "
 
 "
 
-addqueue test_data/*
+addqueue test_data/* test_data/inexistent-file 
 showqueue
 rmqueue 1 2 3 4 5 6 7 8
 rmqueue 1 2 3 4 5 6 7 8
