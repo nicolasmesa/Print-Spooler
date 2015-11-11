@@ -82,7 +82,7 @@ To uninstall just type the command "make uninstall"
 
 Testing
 
-To run the tests type the command "make test". This will do the same thing as running "make uninstall", then "make install", then the tests are run and, finally, "make uninstall" is called again. For this reason, it is important to note that after running this test suite, the command "make install" need to be executed again.
+To run the tests type the command "make test". This will do the same thing as running "make uninstall", then "make install", then the tests are run then, "make uninstall" is called again and finally, "make install" is called
 
 
 Cleaning
