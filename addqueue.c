@@ -88,10 +88,19 @@ void addFileToQueue(char *filePath) {
     return;
   }
 
-  fstat(fd, &statBuf);
+
+  // Make sure only regular files are sent to print
+  int statRet = fstat(fd, &statBuf);
+
+  if (statRet) {
+    close(fd);
+    printf("%s: X %s\n", filePath, strerror(errno));
+    return;
+  }
 
   if (!S_ISREG(statBuf.st_mode)) {
     printf("%s: X Only regular files are allowed\n", filePath);
+    close(fd);
     return;
   }
 
