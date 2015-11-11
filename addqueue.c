@@ -77,10 +77,7 @@ void copyFile(int fd, char *dst) {
 void addFileToQueue(char *filePath) {
   unsigned long fileId = config->next_id;
   struct file_struct *file;
-
-  if (filePath == NULL) {
-    return;
-  }
+  struct stat statBuf;
 
   runAsRunner();
   int fd = safeOpen(filePath, O_RDONLY);
@@ -88,6 +85,13 @@ void addFileToQueue(char *filePath) {
 
   if (fd < 0) {
     printf("%s: X %s\n", filePath, strerror(errno));
+    return;
+  }
+
+  fstat(fd, &statBuf);
+
+  if (!S_ISREG(statBuf.st_mode)) {
+    printf("%s: X Only regular files are allowed\n", filePath);
     return;
   }
 
