@@ -93,8 +93,8 @@ void addFileToQueue(char *filePath) {
   int statRet = fstat(fd, &statBuf);
 
   if (statRet) {
-    close(fd);
     printf("%s: X %s\n", filePath, strerror(errno));
+    close(fd);
     return;
   }
 
