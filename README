@@ -1,0 +1,90 @@
+Print Spooler
+By: Nicolas Mesa (nm2805)
+
+
+
+This project produces three commands that are supposed to simulate a Print Spooler:
+
+1. addqueue: receives paths to different files as its arguments and, after performing some validations, copies each file to a protected directory. The output of the program provides a summary for each file, displaying the file name and a "Y" if the file was added successfully to the queue or an "X" followed by a description of the error if it could not be added.
+
+Example: addqueue file01 file02 file03
+
+
+2. showqueue: displays the current print queue with some information about the files. This information includes the file name, the id of the user that made the request to print the file, the date and time that the file was added and a unique identifier for the file.
+
+Example: showqueue
+
+
+3. rmqueue: receives the ids of different files that currently reside in the queue, performs some validations and deletes each file from the protected directory. The output provides a summary for each file id displaying the file id and a "Y" if the deletion was successful or an "X" followed by an error message if the file could not be deleted.
+
+Example: rmqueue 1 3 2
+
+
+Make
+
+Building
+
+To build just run "make" or "make build" and the commands will be compiled.
+
+
+Installation
+
+To install just run the command "make install" as root. This will build the commands, copy them to the /bin folder, set the right permissions, add the setUID permission and create the protected directories with the right permissions.
+
+
+Uninstalling
+
+To uninstall just type the command "make uninstall"
+
+
+Testing
+
+To run the tests type the command "make test". This will do the same thing as running "make uninstall", then "make install", then the tests are run and, finally, "make uninstall" is called again. For this reason, it is important to note that after running this test suite, the command "make install" need to be executed again.
+
+
+Cleaning
+
+To clean the directory just type "make clean" and all of the object files and commands will be removed from the source code directory.
+
+
+Internals
+
+Spooler User: "user01" is the user that is the owner of the commands in /bin and also the owner of the protected directories. The commands run as this user and group.
+
+Protected directories: The main protected directory is located at "/home/user01/spooler". Inside this directory, other two directories reside: "config" and "printer". The "config" directory starts empty but after files are added to the queue, contains a "config" file and a "file-list" file. The "printer" directory contains the files that are added to the queue. All of these directories and files belong to the user "user01".
+
+
+Project specification:
+
+For this assignment, you will implement something that looks a lot
+like a print spooler.  You will run these commands on a virtual
+machine; see the <a href="vmware.pd">instructions</a>.
+
+The print spooler itself will run as some other userid.  You must
+test it as one or more other users.
+
+Briefly, you must implement three commands, "addqueue", "showqueue",
+and "rmqueue".  All are privileged.  "addqueue' takes a set of file
+names as arguments, and copies the contents of those files to some
+protected directory.  "showqueue" lists the queued files: some
+arbitrary name (*not* the original file name, but a number is fine),
+the owner (the userid who made the request), the time and date it
+was added, and some sort of unique identifier.  This unique identifier
+may or may not be the same as the file name; that's entirely up to
+you.  "rmqueue" takes a list of unique identifiers and deletes those
+entries from the queue.  Only the user who added a file to the queue
+may delete it.
+
+You do not need to worry about race conditions for generating file
+names or unique identifiers.  That is, there is no need to lock any
+resource for the counter.
+
+You may use setuid or message-passing.  If you use the latter, it's
+perfectly ok to start some daemons manually.
+
+You must use at least three userids: one for the protected resource,
+and at least two test userids.  That latter is needed to test if
+one user can delete the other's files.
+
+There must not be any way to look at or change the spool directory
+or its contents except through these commands.
