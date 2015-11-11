@@ -40,9 +40,12 @@ void copyFile(int fd, char *dst) {
 
   int dstFd = safeOpenWithPerms(dst, O_CREAT | O_EXCL | O_RDWR, 0600);
 
-  // The file may already exist. Following advice in http://www.homeport.org/~adam/setuid.7.html
-  // We terminate the program in response to a strange situation rather than attepting to 
-  // carry on. One solution here could be incrementing config->file_id and calling this
+  // The file may already exist. Following advice in
+  // http://www.homeport.org/~adam/setuid.7.html
+  // We terminate the program in response to a strange situation rather than
+  // attepting to
+  // carry on. One solution here could be incrementing config->file_id and
+  // calling this
   // function again
   if (dstFd < 0) {
     printAndExit(NULL);
@@ -88,7 +91,6 @@ void addFileToQueue(char *filePath) {
     return;
   }
 
-
   // Make sure only regular files are sent to print
   int statRet = fstat(fd, &statBuf);
 
@@ -114,7 +116,6 @@ void addFileToQueue(char *filePath) {
   free(dst);
 
   close(fd);
-
 
   file = safeMalloc(sizeof(struct file_struct));
 

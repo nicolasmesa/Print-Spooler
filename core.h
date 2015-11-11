@@ -68,7 +68,7 @@ char *getPrintFilePath(unsigned long fileId);
 
 /**
  * Opens the file and returns the file descriptor only
- * if the file descriptor is not one of stdin, stdout, 
+ * if the file descriptor is not one of stdin, stdout,
  * stderr. Note that it doesn't check for negative values,
  * this check is left to the caller.
  */
@@ -76,7 +76,7 @@ int safeOpen(const char *path, int oflag);
 
 /**
  * Opens the file and returns the file descriptor only
- * if the file descriptor is not one of stdin, stdout, 
+ * if the file descriptor is not one of stdin, stdout,
  * stderr. Note that it doesn't check for negative values,
  * this check is left to the caller.
  */

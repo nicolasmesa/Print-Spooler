@@ -89,7 +89,6 @@ int safeOpen(const char *path, int oflag) {
 int safeOpenWithPerms(const char *path, int oflag, int perms) {
   int fd = open(path, oflag, perms);
 
-
   // This means that one of stdin, stdout or stderr are closed
   if (!fdIsValid(fd)) {
     close(fd);
